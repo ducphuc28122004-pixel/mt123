@@ -105,8 +105,8 @@ tieu_de_text = "DẠO BƯỚC HONGKONG 1999"
 ten_ca_si = "Cre: DP"
  
 loi_bai_hat = [
-"Thương MT của mk lém 🩵🩵, rồi một ngày giông gió tóc cậu rối bời",
-"Mk sẽ là người xuất hiện giúp Minh Thương buộc hết đóng muộn phiền nhaa"
+"Thương MT của mk lém , rồi một ngày giông gió tóc cậu rối bời",
+"Mk sẽ là người xuất hiện giúp MT buộc hết đóng muộn phiền nhaa"
 ]
 thoi_gian_loi = [0.0, 1.5, 2.8, 7.0, 9.0, 219.5]
 fade_loi = [0.0, 0.0, 0.0, 0.0, 0.0, 0.0]
