@@ -1,0 +1,164 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+<meta charset="UTF-8">
+<title>Vì yêu cứ đâm đầu</title>
+
+<link href="https://fonts.googleapis.com/css2?family=Oswald:wght@500&family=Licorice&family=Pacifico&display=swap" rel="stylesheet">
+
+<style>
+body { margin:0; background:black; overflow:hidden; }
+canvas { display:block; margin:auto; }
+
+#startBtn {
+    position:absolute;
+    top:50%; left:50%;
+    transform:translate(-50%,-50%);
+    padding:15px 30px;
+    font-size:20px;
+    background:pink;
+    border:none;
+    border-radius:10px;
+    cursor:pointer;
+}
+</style>
+</head>
+
+<body>
+
+<button id="startBtn">▶ Bấm để bắt đầu</button>
+<canvas id="canvas" width="960" height="540"></canvas>
+<audio id="music" src="song.mp3"></audio>
+
+<script>
+const canvas = document.getElementById("canvas");
+const ctx = canvas.getContext("2d");
+
+const RONG = 960, CAO = 540;
+
+// ===== HẠT =====
+let hat = [];
+for (let i = 0; i < 80; i++) {
+    hat.push({
+        x: Math.random()*RONG,
+        y: Math.random()*CAO,
+        speed: Math.random()*0.4+0.2,
+        size: Math.random()*2+1
+    });
+}
+
+function capNhatHat(){
+    ctx.fillStyle="white";
+    hat.forEach(h=>{
+        h.y-=h.speed;
+        if(h.y<0){ h.x=Math.random()*RONG; h.y=CAO; }
+        ctx.beginPath();
+        ctx.arc(h.x,h.y,h.size,0,Math.PI*2);
+        ctx.fill();
+    });
+}
+
+// ===== ẢNH =====
+let img=new Image();
+img.src="image.png";
+
+// ===== NHẠC =====
+let music=document.getElementById("music");
+
+// ===== TEXT =====
+const tieuDe="DẠO BƯỚC HONGKONG 1999";
+const caSi="Cre: DP";
+
+const loi=[
+"Thương MT của mk lém , rồi một ngày giông gió tóc cậu rối bời",
+"Mk sẽ là người xuất hiện giúp MT buộc hết đống muộn phiền nhaaa"
+];
+
+let startTime=0;
+
+// ===== WRAP FIX =====
+function drawWrappedText(text,x,y,maxWidth,lineHeight){
+    let words=text.split(" ");
+    let line="";
+    for(let i=0;i<words.length;i++){
+        let test=line+words[i]+" ";
+        let w=ctx.measureText(test).width;
+        if(w>maxWidth&&i>0){
+            ctx.fillText(line,x,y);
+            line=words[i]+" ";
+            y+=lineHeight;
+        }else line=test;
+    }
+    ctx.fillText(line,x,y);
+    return y+lineHeight;
+}
+
+// ===== TEXT =====
+function veText(time){
+    ctx.fillStyle="#ff8fcf";
+    ctx.font="70px Oswald";
+    ctx.fillText(tieuDe,70,120);
+
+    ctx.fillStyle="white";
+    ctx.font="36px Licorice";
+    ctx.fillText(caSi,100,170);
+
+    let maxWidth=RONG-320;
+
+    let alpha=Math.min(1,time/2);
+    ctx.globalAlpha=alpha;
+
+    ctx.fillStyle="#ccc";
+    ctx.font="28px Pacifico";
+
+    let y=300;
+    y=drawWrappedText(loi[0],70,y,maxWidth,40);
+    drawWrappedText(loi[1],70,y,maxWidth,40);
+
+    ctx.globalAlpha=1;
+}
+
+// ===== ẢNH =====
+function veAnh(){
+    if(!img.complete) return;
+
+    let w=img.width*0.2;
+    let h=img.height*0.2;
+    let x=RONG-250;
+    let y=CAO/2-100;
+
+    ctx.drawImage(img,x,y,w,h);
+
+    ctx.save();
+    ctx.translate(x,y+h);
+    ctx.scale(1,-1);
+    ctx.globalAlpha=0.4;
+    ctx.drawImage(img,0,0,w,h*0.6);
+    ctx.restore();
+}
+
+// ===== LOOP =====
+function draw(){
+    ctx.fillStyle="black";
+    ctx.fillRect(0,0,RONG,CAO);
+
+    let time=(Date.now()-startTime)/1000;
+
+    capNhatHat();
+    veAnh();
+    veText(time);
+
+    requestAnimationFrame(draw);
+}
+
+// ===== START =====
+document.getElementById("startBtn").onclick=()=>{
+    music.play();
+    startTime=Date.now();
+    document.getElementById("startBtn").style.display="none";
+    draw();
+};
+</script>
+
+</body>
+</html>
